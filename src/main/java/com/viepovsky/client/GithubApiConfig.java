@@ -1,4 +1,4 @@
-package com.viepovsky;
+package com.viepovsky.client;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
