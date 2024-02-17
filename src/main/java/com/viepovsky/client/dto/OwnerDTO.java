@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Owner {
+public class OwnerDTO {
 
     @JsonProperty("login")
     private String login;
