@@ -6,12 +6,12 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GithubRepository {
+public class GithubRepositoryDTO {
 
     @JsonProperty("name")
-    private String repoName;
+    private String repositoryName;
 
     @JsonProperty("owner")
-    private GithubRepositoryOwner owner;
+    private Owner repositoryOwner;
 
 }

@@ -1,7 +1,6 @@
 package com.viepovsky.client;
 
-import com.viepovsky.client.dto.GithubClientResponse;
-import com.viepovsky.client.dto.GithubRepository;
+import com.viepovsky.client.dto.GithubRepositoryDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -32,18 +31,18 @@ public class GithubApiClient {
 
     private final GithubApiConfig githubApiConfig;
 
-    public List<GithubRepository> getAllRepositoriesByUsername(String username) {
+    public List<GithubRepositoryDTO> getAllRepositoriesByUsername(String username) {
         HttpHeaders header = buildHeader();
         URI url = buildUrl(username);
         HttpEntity<String> requestEntityHeaders = new HttpEntity<>(header);
         try {
-            ResponseEntity<GithubRepository[]> responseEntity = restTemplate.exchange(
+            ResponseEntity<GithubRepositoryDTO[]> responseEntity = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
                     requestEntityHeaders,
-                    GithubRepository[].class
+                    GithubRepositoryDTO[].class
             );
-            return Arrays.asList(ofNullable(responseEntity.getBody()).orElse(new GithubRepository[0]));
+            return Arrays.asList(ofNullable(responseEntity.getBody()).orElse(new GithubRepositoryDTO[0]));
         } catch (RestClientException e) {
             log.error("Error while getting repositories." + e.getMessage(), e);
             return Collections.emptyList();

@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FetchApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FetchApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(FetchApplication.class, args);
+    }
 
 }

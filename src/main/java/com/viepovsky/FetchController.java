@@ -24,7 +24,7 @@ class FetchController {
     ResponseEntity<List<RepositoryResponse>> getAllRepositoriesByUsername(
             @RequestParam(name = "username") @NotBlank String username
     ) {
-        List<RepositoryResponse> respositories = fetchService.getAllRepositoriesByUsername();
+        List<RepositoryResponse> respositories = fetchService.getAllRepositoriesByUsername(username);
         return ResponseEntity.ok(respositories);
     }
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GithubRepositoryOwner {
+public class Owner {
 
     @JsonProperty("login")
     private String login;
