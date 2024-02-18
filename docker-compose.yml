@@ -1,0 +1,7 @@
+services:
+  app:
+    container_name: github-repo-fetch
+    image: viepovsky/github-repo-fetch:latest
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
