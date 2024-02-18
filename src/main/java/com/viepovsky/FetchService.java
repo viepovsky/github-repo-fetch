@@ -17,8 +17,10 @@ class FetchService {
     private final Mapper mapper;
 
     List<RepositoryResponse> getAllRepositoriesByUsername(String username) {
-        List<GithubRepositoryDTO> repositoryDTO = client.getAllRepositoriesAndBranchesByUsername(username);
+        List<GithubRepositoryDTO> repositoryDTO = client.getAllRepositoriesByUsername(username);
         return repositoryDTO.stream()
+                            .filter(r -> !r.isFork())
+                            .map(client::getAllBranchesAndLastCommits)
                             .map(mapper::mapToRepositoryResponse)
                             .toList();
     }

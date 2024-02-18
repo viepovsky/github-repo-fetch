@@ -16,6 +16,9 @@ public class GithubRepositoryDTO {
     @JsonProperty("owner")
     private OwnerDTO repositoryOwner;
 
+    @JsonProperty("fork")
+    private boolean isFork;
+
     private List<BranchDTO> branches;
 
 }

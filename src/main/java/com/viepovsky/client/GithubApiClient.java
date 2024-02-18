@@ -34,10 +34,10 @@ public class GithubApiClient {
 
     private final GithubApiConfig githubApiConfig;
 
-    public List<GithubRepositoryDTO> getAllRepositoriesAndBranchesByUsername(String username) {
+    public List<GithubRepositoryDTO> getAllRepositoriesByUsername(String username) {
         HttpHeaders header = buildHeader();
-        URI url = buildUserUrl(username);
         HttpEntity<String> requestEntityHeaders = new HttpEntity<>(header);
+        URI url = buildUserUrl(username);
         try {
             ResponseEntity<GithubRepositoryDTO[]> responseEntity = restTemplate.exchange(
                     url,
@@ -45,10 +45,7 @@ public class GithubApiClient {
                     requestEntityHeaders,
                     GithubRepositoryDTO[].class
             );
-            List<GithubRepositoryDTO> githubRepositories = Arrays.asList(ofNullable(responseEntity.getBody()).orElse(new GithubRepositoryDTO[0]));
-
-            getAllBranchesAndLastCommits(githubRepositories);
-            return githubRepositories;
+            return Arrays.asList(ofNullable(responseEntity.getBody()).orElse(new GithubRepositoryDTO[0]));
         } catch (HttpClientErrorException e) {
             log.error("Error while getting repositories. " + e.getMessage());
             throw e;
@@ -82,29 +79,29 @@ public class GithubApiClient {
                                    .toUri();
     }
 
-    private void getAllBranchesAndLastCommits(List<GithubRepositoryDTO> repositories) {
+    public GithubRepositoryDTO getAllBranchesAndLastCommits(GithubRepositoryDTO repository) {
         HttpHeaders header = buildHeader();
         HttpEntity<String> requestEntityHeaders = new HttpEntity<>(header);
-        for (GithubRepositoryDTO repository : repositories) {
-            URI url = buildRepoUrl(
-                    repository.getRepositoryOwner()
-                              .getLogin(),
-                    repository.getRepositoryName()
+        URI url = buildRepoUrl(
+                repository.getRepositoryOwner()
+                          .getLogin(),
+                repository.getRepositoryName()
+        );
+        try {
+            ResponseEntity<BranchDTO[]> responseEntity = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntityHeaders,
+                    BranchDTO[].class
             );
-            try {
-                ResponseEntity<BranchDTO[]> responseEntity = restTemplate.exchange(
-                        url,
-                        HttpMethod.GET,
-                        requestEntityHeaders,
-                        BranchDTO[].class
-                );
 
-                List<BranchDTO> branches = Arrays.asList(ofNullable(responseEntity.getBody()).orElse(new BranchDTO[0]));
-                repository.setBranches(branches);
-            } catch (RestClientException e) {
-                log.error("Error while getting branches." + e.getMessage(), e);
-                repository.setBranches(new ArrayList<>());
-            }
+            List<BranchDTO> branches = Arrays.asList(ofNullable(responseEntity.getBody()).orElse(new BranchDTO[0]));
+            repository.setBranches(branches);
+            return repository;
+        } catch (RestClientException e) {
+            log.error("Error while getting branches." + e.getMessage(), e);
+            repository.setBranches(new ArrayList<>());
+            return repository;
         }
     }
 }
