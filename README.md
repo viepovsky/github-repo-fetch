@@ -22,6 +22,7 @@ docker compose up -d
 Alternatively, if you have downloaded the whole repository, you can run:
 
 ```
+./mvnw clean package
 docker-compose -f docker-compose-local.yml up -d
 ```
 

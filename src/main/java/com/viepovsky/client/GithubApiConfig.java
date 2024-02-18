@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Getter
 @Configuration
-class GithubApiConfig {
+public class GithubApiConfig {
 
     @Bean
     public RestTemplate restTemplate() {
