@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -33,7 +34,7 @@ public class GithubApiClient {
 
     private final GithubApiConfig githubApiConfig;
 
-    public List<GithubRepositoryDTO> getAllRepositoriesByUsername(String username) {
+    public List<GithubRepositoryDTO> getAllRepositoriesAndBranchesByUsername(String username) {
         HttpHeaders header = buildHeader();
         URI url = buildUserUrl(username);
         HttpEntity<String> requestEntityHeaders = new HttpEntity<>(header);
@@ -45,10 +46,14 @@ public class GithubApiClient {
                     GithubRepositoryDTO[].class
             );
             List<GithubRepositoryDTO> githubRepositories = Arrays.asList(ofNullable(responseEntity.getBody()).orElse(new GithubRepositoryDTO[0]));
+
             getAllBranchesAndLastCommits(githubRepositories);
             return githubRepositories;
+        } catch (HttpClientErrorException e) {
+            log.error("Error while getting repositories. " + e.getMessage());
+            throw e;
         } catch (RestClientException e) {
-            log.error("Error while getting repositories." + e.getMessage(), e);
+            log.error("Error while getting repositories. " + e.getMessage());
             return Collections.emptyList();
         }
     }
