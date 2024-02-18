@@ -19,6 +19,12 @@ Alternatively, if you have downloaded the docker-compose.yml, you can run:
 docker compose up -d
 ```
 
+Alternatively, if you have downloaded the whole repository, you can run:
+
+```
+docker-compose -f docker-compose-local.yml up -d
+```
+
 ### Without Docker
 
 If Docker is not installed, follow the instructions below:
@@ -31,6 +37,11 @@ If Docker is not installed, follow the instructions below:
 To use the application you must make a request to `http://localhost:8080/api/v1/repositories` with the `username` parameter.
 
 For example, to check my repositories, use the following link `http://localhost:8080/api/v1/repositories?username=viepovsky`
+
+### Note on Request Limits
+
+##### Please note that this application does not use authentication, and the GitHub API has request limits of 60 requests per hour for a given IP address. If you encounter issues due to exceeding this limit, you may need to wait for the limit to reset or consider using authentication with a personal access token for higher request limits.
+
 
 ## Response schema
 
