@@ -8,14 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 class Mapper {
-    private static final String COMMIT_SHA_PROPERTY_NAME = "sha";
-
     RepositoryResponse mapToRepositoryResponse(GithubRepositoryDTO githubRepository) {
         return new RepositoryResponse(
-                githubRepository.getRepositoryName(),
-                githubRepository.getRepositoryOwner()
-                                .getLogin(),
-                githubRepository.getBranches()
+                githubRepository.repositoryName(),
+                githubRepository.repositoryOwner()
+                                .login(),
+                githubRepository.branches()
                                 .stream()
                                 .map(this::mapToRepositoryBranchResponse)
                                 .toList());
@@ -23,9 +21,9 @@ class Mapper {
 
     RepositoryBranchResponse mapToRepositoryBranchResponse(BranchDTO branch) {
         return new RepositoryBranchResponse(
-                branch.getBranchName(),
-                branch.getLastCommitShaAndUrl()
-                      .get(COMMIT_SHA_PROPERTY_NAME)
+                branch.branchName(),
+                branch.lastCommit()
+                      .sha()
         );
     }
 }

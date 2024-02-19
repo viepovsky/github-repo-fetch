@@ -2,6 +2,7 @@ package com.viepovsky;
 
 import com.viepovsky.client.GithubApiClient;
 import com.viepovsky.client.dto.BranchDTO;
+import com.viepovsky.client.dto.CommitDTO;
 import com.viepovsky.client.dto.GithubRepositoryDTO;
 import com.viepovsky.client.dto.OwnerDTO;
 import com.viepovsky.dto.RepositoryResponse;
@@ -15,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -90,15 +90,15 @@ class FetchServiceTest {
     }
 
     private List<BranchDTO> createDummyBranchDTOs() {
-        Map<String, String> map = Map.of("sha", "8b04ddb794776628b30b84aeab31977c7ab620e8");
+        CommitDTO commitDTO = new CommitDTO("8b04ddb794776628b30b84aeab31977c7ab620e8");
         BranchDTO branchDTO = BranchDTO.builder()
                                        .branchName("main")
-                                       .lastCommitShaAndUrl(map)
+                                       .lastCommit(commitDTO)
                                        .build();
-        Map<String, String> map2 = Map.of("sha", "c4e677f63855db39dc9d53617c50e59d6f6d4932");
+        CommitDTO commitDTO2 = new CommitDTO("c4e677f63855db39dc9d53617c50e59d6f6d4932");
         BranchDTO branchDTO2 = BranchDTO.builder()
                                         .branchName("feature-2.0")
-                                        .lastCommitShaAndUrl(map2)
+                                        .lastCommit(commitDTO2)
                                         .build();
 
         return new ArrayList<>(List.of(branchDTO, branchDTO2));

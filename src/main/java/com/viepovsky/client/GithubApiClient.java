@@ -15,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -83,9 +82,9 @@ public class GithubApiClient {
         HttpHeaders header = buildHeader();
         HttpEntity<String> requestEntityHeaders = new HttpEntity<>(header);
         URI url = buildRepoUrl(
-                repository.getRepositoryOwner()
-                          .getLogin(),
-                repository.getRepositoryName()
+                repository.repositoryOwner()
+                          .login(),
+                repository.repositoryName()
         );
         try {
             ResponseEntity<BranchDTO[]> responseEntity = restTemplate.exchange(
@@ -96,11 +95,15 @@ public class GithubApiClient {
             );
 
             List<BranchDTO> branches = Arrays.asList(ofNullable(responseEntity.getBody()).orElse(new BranchDTO[0]));
-            repository.setBranches(branches);
-            return repository;
+
+            return GithubRepositoryDTO.builder()
+                                      .repositoryName(repository.repositoryName())
+                                      .repositoryOwner(repository.repositoryOwner())
+                                      .isFork(repository.isFork())
+                                      .branches(branches)
+                                      .build();
         } catch (RestClientException e) {
             log.error("Error while getting branches." + e.getMessage(), e);
-            repository.setBranches(new ArrayList<>());
             return repository;
         }
     }
