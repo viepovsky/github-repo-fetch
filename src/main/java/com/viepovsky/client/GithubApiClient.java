@@ -9,9 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @Slf4j
@@ -21,13 +19,10 @@ public class GithubApiClient {
 
     private final RestClient restClient;
 
-    private final GithubApiConfig githubApiConfig;
-
     public List<GithubRepositoryDTO> getAllRepositoriesByUsername(String username) {
-        URI url = buildUserUrl(username);
         try {
             return restClient.get()
-                             .uri(url)
+                             .uri("/users/{username}/repos", username)
                              .accept(MediaType.APPLICATION_JSON)
                              .retrieve()
                              .body(new ParameterizedTypeReference<>() {
@@ -38,33 +33,13 @@ public class GithubApiClient {
         }
     }
 
-    private URI buildUserUrl(String username) {
-        String path = String.format("/users/%s/repos", username);
-        return createUri(path);
-    }
-
-    private URI buildRepoUrl(String username, String repositoryName) {
-        String path = String.format("/repos/%s/%s/branches", username, repositoryName);
-        return createUri(path);
-    }
-
-    private URI createUri(String path) {
-        return UriComponentsBuilder.fromHttpUrl(githubApiConfig.getGithubApiEndpoint())
-                                   .path(path)
-                                   .build()
-                                   .encode()
-                                   .toUri();
-    }
-
     public GithubRepositoryDTO getAllBranchesAndLastCommits(GithubRepositoryDTO repository) {
-        URI url = buildRepoUrl(
-                repository.repositoryOwner()
-                          .login(),
-                repository.repositoryName()
-        );
+        String username = repository.repositoryOwner()
+                                    .login();
+        String repositoryName = repository.repositoryName();
         try {
             List<BranchDTO> response = restClient.get()
-                                                 .uri(url)
+                                                 .uri("/repos/{username}/{repositoryName}/branches", username, repositoryName)
                                                  .accept(MediaType.APPLICATION_JSON)
                                                  .retrieve()
                                                  .body(new ParameterizedTypeReference<>() {

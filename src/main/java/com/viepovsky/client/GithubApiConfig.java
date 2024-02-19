@@ -13,6 +13,7 @@ public class GithubApiConfig {
     @Bean
     public RestClient restClient() {
         return RestClient.builder()
+                         .baseUrl(githubApiEndpoint)
                          .build();
     }
 
