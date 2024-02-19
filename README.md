@@ -78,10 +78,6 @@ For example, to check my repositories, use the following link `http://localhost:
 }
 ```
 
-## Note on Request Limits
-Please note that this application does not use authentication, and the GitHub API has request limits of 60 requests per hour for a given IP address. 
-If you encounter issues due to exceeding this limit, you may need to wait for the limit to reset or consider using authentication with a personal access token for higher request limits.
-
 ## Example
 
 ### Response for not existing user:
